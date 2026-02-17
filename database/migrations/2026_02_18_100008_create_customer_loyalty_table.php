@@ -1,0 +1,24 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('customer_loyalty', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('customer_id')->constrained('customers')->cascadeOnDelete();
+            $table->integer('points_balance')->default(0);
+            $table->integer('lifetime_points')->default(0);
+            $table->string('tier', 50)->nullable();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('customer_loyalty');
+    }
+};
