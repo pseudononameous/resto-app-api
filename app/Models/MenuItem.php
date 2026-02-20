@@ -13,8 +13,18 @@ class MenuItem extends Model
 
     protected $guarded = [];
 
-    public function product() { return $this->belongsTo(Product::class); }
-    public function menuCategory() { return $this->belongsTo(MenuCategory::class, 'menu_category_id'); }
-    public function store() { return $this->belongsTo(Store::class); }
-}
+    public function menuCategory()
+    {
+        return $this->belongsTo(MenuCategory::class, 'menu_category_id');
+    }
 
+    public function store()
+    {
+        return $this->belongsTo(Store::class);
+    }
+
+    public function ingredients()
+    {
+        return $this->hasMany(MenuItemIngredient::class)->orderBy('id');
+    }
+}

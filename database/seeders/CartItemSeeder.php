@@ -22,12 +22,11 @@ class CartItemSeeder extends Seeder
             CartItem::firstOrCreate(
                 [
                     'cart_id' => $carts[$i],
-                    'product_id' => $products[$i],
                     'menu_item_id' => $menuItems[$i],
                 ],
                 [
                     'cart_id' => $carts[$i],
-                    'product_id' => $products[$i],
+                    'product_id' => null,
                     'menu_item_id' => $menuItems[$i],
                     'quantity' => $quantities[$i],
                     'total_price' => $prices[$i],
