@@ -9,6 +9,9 @@ class MenuCategory extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $guarded = [];
+    public function store() { return $this->belongsTo(Store::class); }
 }
 

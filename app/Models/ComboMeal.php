@@ -9,6 +9,8 @@ class ComboMeal extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $guarded = [];
 }
 

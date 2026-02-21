@@ -11,6 +11,8 @@ class DiningTable extends Model
 
     protected $table = 'tables';
 
+    public $timestamps = false;
+
     protected $guarded = [];
 }
 

@@ -9,6 +9,12 @@ class Cart extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $guarded = [];
+
+    public function user() { return $this->belongsTo(User::class); }
+    public function customer() { return $this->belongsTo(Customer::class); }
+    public function store() { return $this->belongsTo(Store::class); }
 }
 
