@@ -10,9 +10,13 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
-        return ApiResponse::success(Category::orderBy('name')->get());
+        $q = Category::orderBy('name');
+        if ($request->boolean('with_product_count')) {
+            $q->withCount('products');
+        }
+        return ApiResponse::success($q->get());
     }
 
     public function store(Request $request): JsonResponse

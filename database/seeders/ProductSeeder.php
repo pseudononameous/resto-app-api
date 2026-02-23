@@ -12,28 +12,51 @@ class ProductSeeder extends Seeder
 {
     public function run(): void
     {
-        $categories = Category::orderBy('id')->limit(5)->pluck('id')->toArray();
-        $brands = Brand::orderBy('id')->limit(5)->pluck('id')->toArray();
-        $stores = Store::orderBy('id')->limit(5)->pluck('id')->toArray();
+        $categoryIds = Category::take(5)->pluck('id')->toArray();
+        $brandIds    = Brand::take(5)->pluck('id')->toArray();
+        $storeIds    = Store::take(5)->pluck('id')->toArray();
 
         $products = [
-            ['name' => 'Fresh Milk 1L', 'sku' => 'BEV-001', 'price' => 85.00, 'cost_price' => 55.00, 'qty' => 50, 'reorder_level' => 10],
-            ['name' => 'Tomato Paste 400g', 'sku' => 'DRY-002', 'price' => 120.00, 'cost_price' => 75.00, 'qty' => 30, 'reorder_level' => 5],
-            ['name' => 'Chicken Breast kg', 'sku' => 'MEAT-003', 'price' => 280.00, 'cost_price' => 220.00, 'qty' => 20, 'reorder_level' => 5],
-            ['name' => 'Lettuce Head', 'sku' => 'PROD-004', 'price' => 45.00, 'cost_price' => 25.00, 'qty' => 40, 'reorder_level' => 10],
-            ['name' => 'Olive Oil 500ml', 'sku' => 'DRY-005', 'price' => 350.00, 'cost_price' => 280.00, 'qty' => 25, 'reorder_level' => 5],
+            ['Espresso Blend', 120, 80, 'kg'],
+            ['Arabica Beans', 95, 60, 'kg'],
+            ['Milk Full Cream', 75, 45, 'L'],
+            ['Oat Milk', 85, 50, 'L'],
+            ['Croissant', 45, 28, 'pc'],
+            ['Chocolate Muffin', 55, 35, 'pc'],
+            ['Butter Croissant', 48, 30, 'pc'],
+            ['Cinnamon Roll', 65, 40, 'pc'],
+            ['Soda Syrup Cola', 120, 70, 'L'],
+            ['Vanilla Syrup', 95, 55, 'L'],
+            ['Caramel Syrup', 98, 58, 'L'],
+            ['Iced Tea Concentrate', 110, 65, 'L'],
+            ['Sparkling Water', 35, 20, 'bottle'],
+            ['Potato Chips', 42, 25, 'pack'],
+            ['Granola Bar', 38, 22, 'pc'],
+            ['Cookies Assorted', 55, 32, 'pack'],
+            ['Sandwich Wrap', 72, 45, 'pc'],
+            ['Yogurt Cup', 48, 28, 'pc'],
+            ['Cream Cheese', 88, 52, 'kg'],
+            ['Butter Block', 95, 58, 'kg'],
+            ['Filter Paper', 25, 15, 'box'],
+            ['Paper Cup 8oz', 18, 10, 'sleeve'],
+            ['Lid 8oz', 12, 7, 'sleeve'],
+            ['Straws', 8, 5, 'pack'],
+            ['Napkins', 15, 9, 'box'],
         ];
 
-        foreach ($products as $i => $data) {
-            Product::firstOrCreate(
-                ['sku' => $data['sku']],
-                array_merge($data, [
-                    'category_id' => $categories[$i],
-                    'brand_id' => $brands[$i],
-                    'store_id' => $stores[$i],
-                    'availability' => true,
-                ])
-            );
+        foreach ($products as $i => [$name, $price, $cost, $unit]) {
+            Product::create([
+                'name'          => $name,
+                'sku'           => 'CAFE-' . str_pad($i + 1, 4, '0', STR_PAD_LEFT),
+                'price'         => $price,
+                'cost_price'    => $cost,
+                'qty'           => rand(15, 80),
+                'reorder_level' => rand(5, 15),
+                'category_id'   => $categoryIds[$i % 5],
+                'brand_id'      => $brandIds[$i % 5],
+                'store_id'      => $storeIds[$i % 5],
+                'availability'  => true,
+            ]);
         }
     }
 }

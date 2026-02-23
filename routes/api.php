@@ -26,6 +26,7 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('brands', BrandController::class);
         Route::apiResource('categories', CategoryController::class);
         Route::apiResource('stores', StoreController::class);
+        Route::post('products/import', [ProductController::class, 'import']);
         Route::apiResource('products', ProductController::class);
         Route::apiResource('menu-categories', MenuCategoryController::class);
         Route::apiResource('menu-items', MenuItemController::class);

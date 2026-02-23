@@ -11,6 +11,7 @@ class WasteLog extends Model
 
     protected $fillable = [
         'product_id',
+        'batch_id',
         'quantity',
         'reason',
         'recorded_by',
@@ -27,6 +28,11 @@ class WasteLog extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function batch(): BelongsTo
+    {
+        return $this->belongsTo(StockBatch::class, 'batch_id');
     }
 
     public function recordedBy(): BelongsTo

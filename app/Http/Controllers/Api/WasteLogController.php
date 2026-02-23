@@ -11,15 +11,25 @@ use Illuminate\Http\Request;
 class WasteLogController extends Controller
 {
     public function index(Request $request): JsonResponse {
-        $q = WasteLog::with('product')->orderBy('id', 'desc');
+        $q = WasteLog::with(['product', 'batch'])->orderBy('id', 'desc');
+        if ($request->filled('product_id')) {
+            $q->where('product_id', $request->get('product_id'));
+        }
         if ($request->filled('store_id')) { $q->whereHas('product', fn ($q) => $q->where('store_id', $request->get('store_id'))); }
         return ApiResponse::success($q->get());
     }
     public function store(Request $request): JsonResponse {
-        $v = $request->validate(['product_id' => 'required|exists:products,id', 'quantity' => 'required|integer', 'reason' => 'nullable|string|max:150', 'recorded_by' => 'nullable|exists:users,id', 'date' => 'nullable|date']);
-        return ApiResponse::success(WasteLog::create($v), 'Created', 201);
+        $v = $request->validate(['product_id' => 'required|exists:products,id', 'batch_id' => 'nullable|exists:stock_batches,id', 'quantity' => 'required|integer', 'reason' => 'nullable|string|max:150', 'recorded_by' => 'nullable|exists:users,id', 'date' => 'nullable|date']);
+        $log = WasteLog::create($v);
+        if (!empty($v['batch_id']) && $log->quantity > 0) {
+            \App\Models\StockBatch::where('id', $v['batch_id'])->decrement('remaining_quantity', $log->quantity);
+        }
+        return ApiResponse::success($log->fresh()->load(['product', 'batch']), 'Created', 201);
     }
-    public function show(WasteLog $waste_log): JsonResponse { return ApiResponse::success($waste_log->load('product')); }
-    public function update(Request $request, WasteLog $waste_log): JsonResponse { $waste_log->update($request->validate(['product_id' => 'sometimes|exists:products,id', 'quantity' => 'sometimes|integer', 'reason' => 'nullable|string|max:150', 'recorded_by' => 'nullable|exists:users,id', 'date' => 'nullable|date'])); return ApiResponse::success($waste_log->fresh()->load('product')); }
+    public function show(WasteLog $waste_log): JsonResponse { return ApiResponse::success($waste_log->load(['product', 'batch'])); }
+    public function update(Request $request, WasteLog $waste_log): JsonResponse {
+        $waste_log->update($request->validate(['product_id' => 'sometimes|exists:products,id', 'batch_id' => 'nullable|exists:stock_batches,id', 'quantity' => 'sometimes|integer', 'reason' => 'nullable|string|max:150', 'recorded_by' => 'nullable|exists:users,id', 'date' => 'nullable|date']));
+        return ApiResponse::success($waste_log->fresh()->load(['product', 'batch']));
+    }
     public function destroy(WasteLog $waste_log): JsonResponse { $waste_log->delete(); return ApiResponse::success(null, 'Deleted'); }
 }

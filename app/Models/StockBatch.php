@@ -12,6 +12,12 @@ class StockBatch extends Model
     protected $fillable = [
         'product_id',
         'quantity',
+        'remaining_quantity',
+        'supplier',
+        'reference_no',
+        'unit_cost',
+        'storage_location',
+        'notes',
         'prepared_date',
         'expiry_date',
         'prepared_by',
@@ -22,6 +28,7 @@ class StockBatch extends Model
         return [
             'prepared_date' => 'date',
             'expiry_date' => 'date',
+            'unit_cost' => 'decimal:2',
         ];
     }
 

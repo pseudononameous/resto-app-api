@@ -9,8 +9,7 @@ class CategorySeeder extends Seeder
 {
     public function run(): void
     {
-        $names = ['Beverages', 'Dairy', 'Produce', 'Meat & Seafood', 'Dry Goods'];
-
+        $names = ['Coffee & Espresso', 'Pastries & Bakery', 'Beverages', 'Snacks', 'Dairy & Refrigerated'];
         foreach ($names as $name) {
             Category::firstOrCreate(['name' => $name], ['active' => true]);
         }

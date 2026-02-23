@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Product;
+use App\Models\StockBatch;
 use App\Models\User;
 use App\Models\WasteLog;
 use Illuminate\Database\Seeder;
@@ -11,17 +12,25 @@ class WasteLogSeeder extends Seeder
 {
     public function run(): void
     {
-        $products = Product::orderBy('id')->limit(5)->pluck('id')->toArray();
-        $users = User::orderBy('id')->limit(5)->pluck('id')->toArray();
-        $reasons = ['Expired', 'Damaged', 'Spillage', 'Quality issue', 'Overprepared'];
+        $products = Product::all();
+        $userIds  = User::pluck('id')->toArray();
+        if ($products->isEmpty() || empty($userIds)) {
+            return;
+        }
 
-        for ($i = 0; $i < 5; $i++) {
+        $reasons = ['expired', 'spoiled', 'damaged', 'preparation_waste', 'other'];
+        $totalLogs = min(50, (int) ($products->count() * 2));
+
+        for ($i = 0; $i < $totalLogs; $i++) {
+            $product = $products->random();
+            $batches = StockBatch::where('product_id', $product->id)->pluck('id')->toArray();
             WasteLog::create([
-                'product_id' => $products[$i],
-                'quantity' => $i + 1,
-                'reason' => $reasons[$i],
-                'recorded_by' => $users[$i],
-                'date' => now()->subDays($i),
+                'product_id'   => $product->id,
+                'batch_id'     => $batches ? $batches[array_rand($batches)] : null,
+                'quantity'    => rand(1, 4),
+                'reason'      => $reasons[array_rand($reasons)],
+                'recorded_by' => $userIds[array_rand($userIds)],
+                'date'        => now()->subDays(rand(0, 21)),
             ]);
         }
     }
