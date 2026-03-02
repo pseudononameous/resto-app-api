@@ -1,0 +1,41 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: resto-app-api
+    ports:
+      - "8000:80"
+    environment:
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: ""
+      APP_URL: http://localhost:8000
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: resto_app
+      DB_USERNAME: resto_user
+      DB_PASSWORD: secret
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: resto-app-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: resto_app
+      MYSQL_USER: resto_user
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root_secret
+    ports:
+      - "3307:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:
+
