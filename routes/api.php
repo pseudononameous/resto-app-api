@@ -1,7 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\BillingSettingsController;
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\CourierSettingsController;
+use App\Http\Controllers\Api\IntegrationsSettingsController;
+use App\Http\Controllers\Api\NotificationSettingsController;
+use App\Http\Controllers\Api\PaymentMethodSettingsController;
+use App\Http\Controllers\Api\PayoutSettingsController;
 use App\Http\Controllers\Api\StoreController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\MenuCategoryController;
@@ -20,6 +26,10 @@ use App\Http\Controllers\Api\StockBatchController;
 use App\Http\Controllers\Api\ReservationController;
 use App\Http\Controllers\Api\WasteLogController;
 use App\Http\Controllers\Api\DeliveryController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\RoleController;
+use App\Http\Controllers\Api\PermissionController;
+use App\Http\Controllers\Api\TaxSettingsController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
@@ -48,5 +58,32 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('reservations', ReservationController::class);
         Route::apiResource('waste-logs', WasteLogController::class);
         Route::apiResource('deliveries', DeliveryController::class);
+        Route::apiResource('users', UserController::class);
+        Route::apiResource('roles', RoleController::class);
+        Route::put('roles/{role}/permissions', [RoleController::class, 'syncPermissions']);
+        Route::get('permissions', [PermissionController::class, 'index']);
+
+        Route::prefix('settings')->group(function () {
+            Route::get('integrations', [IntegrationsSettingsController::class, 'show']);
+            Route::put('integrations', [IntegrationsSettingsController::class, 'update']);
+
+            Route::get('notifications', [NotificationSettingsController::class, 'show']);
+            Route::put('notifications', [NotificationSettingsController::class, 'update']);
+
+            Route::get('payment-methods', [PaymentMethodSettingsController::class, 'show']);
+            Route::put('payment-methods', [PaymentMethodSettingsController::class, 'update']);
+
+            Route::get('payouts', [PayoutSettingsController::class, 'show']);
+            Route::put('payouts', [PayoutSettingsController::class, 'update']);
+
+            Route::get('tax', [TaxSettingsController::class, 'show']);
+            Route::put('tax', [TaxSettingsController::class, 'update']);
+
+            Route::get('billing', [BillingSettingsController::class, 'show']);
+            Route::put('billing', [BillingSettingsController::class, 'update']);
+
+            Route::get('courier', [CourierSettingsController::class, 'show']);
+            Route::put('courier', [CourierSettingsController::class, 'update']);
+        });
     });
 });
