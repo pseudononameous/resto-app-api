@@ -1,6 +1,6 @@
 FROM composer:2 AS composer_stage
 
-FROM php:8.3-apache
+FROM php:8.4-apache
 
 # Install system dependencies and PHP extensions needed for Laravel
 RUN apt-get update && apt-get install -y \
