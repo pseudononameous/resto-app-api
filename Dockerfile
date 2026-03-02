@@ -7,7 +7,10 @@ RUN apt-get update && apt-get install -y \
     git \
     unzip \
     libzip-dev \
-    && docker-php-ext-install pdo_mysql zip \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    && docker-php-ext-install pdo_mysql zip mbstring bcmath exif pcntl \
     && rm -rf /var/lib/apt/lists/*
 
 # Enable Apache mod_rewrite for pretty URLs
