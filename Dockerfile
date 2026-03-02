@@ -27,12 +27,11 @@ WORKDIR /var/www/html
 # Install Composer in the runtime image
 COPY --from=composer_stage /usr/bin/composer /usr/bin/composer
 
-# Copy composer files and install dependencies (cached layer)
-COPY composer.json composer.lock* ./
-RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
-
-# Copy the rest of the application code
+# Copy the application code
 COPY . .
+
+# Install dependencies (uses composer.json / composer.lock from project)
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
 
 # Ensure correct permissions for storage and cache directories
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache && \
