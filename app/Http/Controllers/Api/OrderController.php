@@ -19,6 +19,12 @@ class OrderController extends Controller
         if ($request->filled('status')) {
             $q->where('status', $request->get('status'));
         }
+        if ($request->filled('user_id')) {
+            $q->where('user_id', $request->get('user_id'));
+        }
+        if ($request->filled('customer_id')) {
+            $q->where('customer_id', $request->get('customer_id'));
+        }
         return ApiResponse::success($q->get());
     }
 
