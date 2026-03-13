@@ -35,6 +35,14 @@ class RolePermissionSeeder extends Seeder
             );
         }
 
+        // Super Admin – full access to everything
+        $superAdmin = Role::firstOrCreate(
+            ['slug' => 'super-admin'],
+            ['name' => 'Super Admin', 'description' => 'Super admin with full access']
+        );
+        $superAdmin->permissions()->sync(Permission::pluck('id'));
+
+        // Existing Admin – keep as full access for backward compatibility
         $admin = Role::firstOrCreate(
             ['slug' => 'admin'],
             ['name' => 'Admin', 'description' => 'Full access']
@@ -58,6 +66,50 @@ class RolePermissionSeeder extends Seeder
         );
         $staff->permissions()->sync(
             Permission::whereIn('slug', ['orders.view', 'orders.manage', 'menu-items.view', 'customers.view'])->pluck('id')
+        );
+
+        // Merchant – manage menu, products, inventory, and see orders & customers
+        $merchant = Role::firstOrCreate(
+            ['slug' => 'merchant'],
+            ['name' => 'Merchant', 'description' => 'Manages menu, products, inventory, and customer orders']
+        );
+        $merchant->permissions()->sync(
+            Permission::whereIn('slug', [
+                'orders.view',
+                'orders.manage',
+                'menu-items.view',
+                'menu-items.manage',
+                'products.view',
+                'products.manage',
+                'inventory.view',
+                'inventory.manage',
+                'customers.view',
+                'customers.manage',
+            ])->pluck('id')
+        );
+
+        // Kitchen – focuses on processing orders only
+        $kitchen = Role::firstOrCreate(
+            ['slug' => 'kitchen'],
+            ['name' => 'Kitchen', 'description' => 'Processes and updates orders from the kitchen']
+        );
+        $kitchen->permissions()->sync(
+            Permission::whereIn('slug', [
+                'orders.view',
+                'orders.manage',
+            ])->pluck('id')
+        );
+
+        // Partners – limited visibility into orders and customers
+        $partners = Role::firstOrCreate(
+            ['slug' => 'partners'],
+            ['name' => 'Partners', 'description' => 'Limited read-only partner access']
+        );
+        $partners->permissions()->sync(
+            Permission::whereIn('slug', [
+                'orders.view',
+                'customers.view',
+            ])->pluck('id')
         );
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AppPreviewController;
 use App\Http\Controllers\Api\BillingSettingsController;
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\CategoryController;
@@ -34,6 +35,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
     Route::prefix('auth')->group(base_path('routes/api/auth.php'));
+
+    // App Preview (Turn your website into an app) — public, uses OpenAI like intellect-edge
+    Route::post('app-preview', [AppPreviewController::class, 'store']);
+
     Route::middleware('auth:sanctum')->group(function () {
         Route::apiResource('brands', BrandController::class);
         Route::apiResource('categories', CategoryController::class);

@@ -35,4 +35,15 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | OpenAI (App Preview / "Turn your website into an app")
+    |--------------------------------------------------------------------------
+    | Same pattern as intellect-edge: set OPENAI_API_KEY in .env (copy from
+    | intellect-edge project if you use that key for AI features).
+    */
+    'openai' => [
+        'api_key' => env('OPENAI_API_KEY', ''),
+    ],
+
 ];
